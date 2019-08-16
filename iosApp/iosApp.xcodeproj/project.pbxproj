@@ -115,8 +115,6 @@
 		079877B9A5F7CBDE3EF45704 /* SponsorModel.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SponsorModel.kt; path = ../sessionize/lib/src/commonMain/kotlin/co/touchlab/sessionize/SponsorModel.kt; sourceTree = "<group>"; };
 		08F4E11C17B2120E4BC85DC8 /* TestFunctions.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TestFunctions.kt; path = ../sessionize/lib/src/androidTest/kotlin/co/touchlab/sessionize/TestFunctions.kt; sourceTree = "<group>"; };
 		0921D7C2F35438EE4CFBAAA3 /* ScheduleModel.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ScheduleModel.kt; path = ../sessionize/lib/src/commonMain/kotlin/co/touchlab/sessionize/ScheduleModel.kt; sourceTree = "<group>"; };
-		125AF9578465CC0A904D623C /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
-		1C285D8B24230973F8AA122B /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		2520222C14041C690436F852 /* AppContext.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = AppContext.kt; path = ../sessionize/lib/src/commonMain/kotlin/co/touchlab/sessionize/AppContext.kt; sourceTree = "<group>"; };
 		2584E6485FBEB4999A335565 /* QueryPub.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = QueryPub.kt; path = ../sessionize/lib/src/commonMain/kotlin/co/touchlab/sessionize/db/QueryPub.kt; sourceTree = "<group>"; };
 		2CD6DA0EFBE561CD035FB9B2 /* NotificationsJVM.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = NotificationsJVM.kt; path = ../sessionize/lib/src/main/java/co/touchlab/sessionize/platform/NotificationsJVM.kt; sourceTree = "<group>"; };
@@ -188,6 +186,7 @@
 		A9AFAC7B607FAC746C536621 /* TestFunctions.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TestFunctions.kt; path = ../sessionize/lib/src/commonTest/kotlin/co/touchlab/sessionize/TestFunctions.kt; sourceTree = "<group>"; };
 		AA8B1E691EF99D531191BC78 /* PubSub.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = PubSub.kt; path = ../sessionize/lib/src/commonMain/kotlin/co/touchlab/sessionize/architecture/PubSub.kt; sourceTree = "<group>"; };
 		AC1E58A8A1E85420519CBD6F /* DateHelpers.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DateHelpers.kt; path = ../sessionize/lib/src/iosMain/kotlin/co/touchlab/sessionize/platform/DateHelpers.kt; sourceTree = "<group>"; };
+		B1F3ADE7A91400EA52F328FF /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		B25E757FC7166B4499CF4E36 /* BasePub.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BasePub.kt; path = ../sessionize/lib/src/commonMain/kotlin/co/touchlab/sessionize/architecture/BasePub.kt; sourceTree = "<group>"; };
 		B7B9AFAC0164856080EFB18F /* SpeakerModel.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SpeakerModel.kt; path = ../sessionize/lib/src/commonMain/kotlin/co/touchlab/sessionize/SpeakerModel.kt; sourceTree = "<group>"; };
 		B7FBB68DD89A5CA80DD37542 /* DateAdapter.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DateAdapter.kt; path = ../sessionize/lib/src/commonMain/kotlin/co/touchlab/sessionize/db/DateAdapter.kt; sourceTree = "<group>"; };
@@ -212,6 +211,7 @@
 		F1BCCFB0C3C0EB79A89C8115 /* DateHelpers.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DateHelpers.kt; path = ../sessionize/lib/src/main/java/co/touchlab/sessionize/platform/DateHelpers.kt; sourceTree = "<group>"; };
 		F1E3105B22A5B238008F999F /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		F3268F03C19C8685393B8DDA /* Coroutines.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; name = Coroutines.kt; path = ../sessionize/lib/src/main/java/co/touchlab/sessionize/platform/Coroutines.kt; sourceTree = "<group>"; };
+		FDA0E0308FDAB9AF0CF0D756 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -462,8 +462,8 @@
 		F51C475F4737FE9D915D4236 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				125AF9578465CC0A904D623C /* Pods-iosApp.debug.xcconfig */,
-				1C285D8B24230973F8AA122B /* Pods-iosApp.release.xcconfig */,
+				FDA0E0308FDAB9AF0CF0D756 /* Pods-iosApp.debug.xcconfig */,
+				B1F3ADE7A91400EA52F328FF /* Pods-iosApp.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -929,7 +929,7 @@
 		};
 		6356315520DC58F800BCCDF9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 125AF9578465CC0A904D623C /* Pods-iosApp.debug.xcconfig */;
+			baseConfigurationReference = FDA0E0308FDAB9AF0CF0D756 /* Pods-iosApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = iosApp/iosApp.entitlements;
@@ -956,7 +956,7 @@
 		};
 		6356315620DC58F800BCCDF9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C285D8B24230973F8AA122B /* Pods-iosApp.release.xcconfig */;
+			baseConfigurationReference = B1F3ADE7A91400EA52F328FF /* Pods-iosApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = iosApp/iosApp.entitlements;
@@ -982,7 +982,6 @@
 		};
 		6356315820DC58F800BCCDF9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 125AF9578465CC0A904D623C /* Pods-iosApp.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1017,7 +1016,6 @@
 		};
 		6356315920DC58F800BCCDF9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C285D8B24230973F8AA122B /* Pods-iosApp.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1052,7 +1050,6 @@
 		};
 		D46A4852224A80D200B1D60C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 125AF9578465CC0A904D623C /* Pods-iosApp.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../sessionize/lib/build/xcode-frameworks-test";
@@ -1075,7 +1072,6 @@
 		};
 		D46A4853224A80D200B1D60C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C285D8B24230973F8AA122B /* Pods-iosApp.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../sessionize/lib/build/xcode-frameworks-test";

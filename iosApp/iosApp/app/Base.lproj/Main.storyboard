@@ -902,7 +902,7 @@
                     <view key="view" contentMode="scaleToFill" id="3ND-Dm-xnJ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.70196078431372544" green="0.27058823529411763" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.25490196078431371" blue="0.63921568627450975" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
                         <segue destination="hAB-Au-Rvm" kind="show" identifier="Schedule" id="G8c-Yr-iby"/>
