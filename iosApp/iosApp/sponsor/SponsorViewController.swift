@@ -12,7 +12,7 @@ import lib
 class SponsorViewController: MaterialAppBarUIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var viewModel:SponsorViewModel!
-    var sponsorGroups: [SponsorGroupDbItem]?
+    var sponsorGroups: [SponsorGroup]?
     @IBOutlet weak var sponsorsCollectionView: UICollectionView!
     
     override func viewDidLoad() {
@@ -22,13 +22,12 @@ class SponsorViewController: MaterialAppBarUIViewController, UICollectionViewDat
         sponsorsCollectionView.dataSource = self
         
         viewModel = SponsorViewModel()
-        viewModel.registerForChanges(proc: sponsorResult)
+        viewModel.load { sponsorGroups in
+            self.sponsorGroups = sponsorGroups
+            self.sponsorsCollectionView.reloadData()
+
+        }
         // Do any additional setup after loading the view.
-    }
-    
-    func sponsorResult(sponsorGroups:[SponsorGroupDbItem]) {
-        self.sponsorGroups = sponsorGroups
-        sponsorsCollectionView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,10 +42,10 @@ class SponsorViewController: MaterialAppBarUIViewController, UICollectionViewDat
         if(sponsorGroups != nil)
         {
             let sponsorInfo = sponsorGroups![(indexPath as NSIndexPath).section].sponsors[indexPath.item]
-            if let icon = sponsorInfo.icon {
-                sponsorView.sponsorImageView.kf.setImage(with: URL(string: icon)!)
+//            if let icon = sponsorInfo.icon {
+                sponsorView.sponsorImageView.kf.setImage(with: URL(string: sponsorInfo.icon)!)
                 sponsorView.sponsorImageView.backgroundColor = UIColor.white
-            }
+//            }
         }
         
         return sponsorView
@@ -75,8 +74,8 @@ class SponsorViewController: MaterialAppBarUIViewController, UICollectionViewDat
         SponsorModelKt.sponsorClicked(sponsor: sponsorInfo)
         if sponsorInfo.sponsorId != nil {
             performSegue(withIdentifier: "ShowSponsorDetail", sender: sponsorInfo)
-        } else if let sponsorUrl = sponsorInfo.url {
-            guard let url = URL(string: sponsorUrl) else {
+        } else {
+            guard let url = URL(string: sponsorInfo.url) else {
                 return //be safe
             }
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -104,10 +103,6 @@ class SponsorViewController: MaterialAppBarUIViewController, UICollectionViewDat
         detail.groupName = sponsor.groupName
     }
     
-    deinit {
-        viewModel.unregister()
-    }
-
     /*
     // MARK: - Navigation
 

@@ -57,7 +57,6 @@
 		63A76ACD2129E8F80000515D /* SponsorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A76ACC2129E8F80000515D /* SponsorCollectionViewCell.swift */; };
 		63A76ACF2129E93F0000515D /* SponsorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A76ACE2129E93F0000515D /* SponsorViewController.swift */; };
 		63A76AD12129EFE30000515D /* SponsorGroupCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A76AD02129EFE30000515D /* SponsorGroupCollectionReusableView.swift */; };
-		63A76AD32129F1FB0000515D /* sponsors.json in Resources */ = {isa = PBXBuildFile; fileRef = 63A76AD22129F1FB0000515D /* sponsors.json */; };
 		63CF388E218E165000BA0367 /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CF388D218E165000BA0367 /* UI.swift */; };
 		67F253A5CA38DBB56818EE41 /* TestConcurrent.kt in Sources */ = {isa = PBXBuildFile; fileRef = 74194C8ABF96DA5A197F9966 /* TestConcurrent.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
 		692293BD85E332482FDBC4E9 /* ScheduleFormats.kt in Sources */ = {isa = PBXBuildFile; fileRef = 43CFCECCACAE038D1BCCC4AC /* ScheduleFormats.kt */; settings = {COMPILER_FLAGS = "-w"; }; };
@@ -585,7 +584,6 @@
 				6372423920F915EA0049263B /* schedule.json in Resources */,
 				6372424C20FAD9B40049263B /* SpeakerTableViewCell.xib in Resources */,
 				6356314220DC58F700BCCDF9 /* Assets.xcassets in Resources */,
-				63A76AD32129F1FB0000515D /* sponsors.json in Resources */,
 				6372424F20FAD9B40049263B /* EventTableViewCell.xib in Resources */,
 				F15E05BB2260F4EE0057C7D8 /* baseline_sentiment_very_dissatisfied_black_48dp.png in Resources */,
 				F15E05BA2260F4EE0057C7D8 /* baseline_sentiment_satisfied_black_48dp.png in Resources */,
