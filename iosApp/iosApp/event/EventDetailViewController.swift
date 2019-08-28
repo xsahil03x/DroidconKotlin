@@ -150,13 +150,8 @@ import MaterialComponents
             rsvpButton.isHidden = true
         } else {
             rsvpButton.isHidden = false
-            if (sessionInfo.isRsvped()) {
-                rsvpButton.setImage(UIImage(named: "ic_done"), for: UIControlState())
-                rsvpButton.backgroundColor = colorWithHexString(hexString: "#FCC010")
-            } else {
-                rsvpButton.setImage(UIImage(named: "ic_add"), for: UIControlState())
-                rsvpButton.backgroundColor = colorWithHexString(hexString: "#FCC010")
-            }
+            let imageName = sessionInfo.isRsvped() ? "ic_done" : "ic_add"
+            rsvpButton.setImage(UIImage(named: imageName), for: UIControlState())
         }
     }
     

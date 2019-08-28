@@ -43,11 +43,12 @@ func loadInfo(_ sessionInfo: SessionInfo,
         } else {
             timeConflictLabel.isHidden = true
         }
-        
+    
         titleLabel.sizeToFit()
         timeInfoLabel.sizeToFit()
         descriptionLabel.sizeToFit()
         timeConflictLabel.sizeToFit()
+        layoutSubviews()
     }
 
     func formatHTMLString(_ htmlString: String) -> NSAttributedString {
