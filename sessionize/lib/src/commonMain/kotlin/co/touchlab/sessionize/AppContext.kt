@@ -2,25 +2,39 @@ package co.touchlab.sessionize
 
 import co.touchlab.sessionize.SettingsKeys.KEY_FIRST_RUN
 import co.touchlab.sessionize.api.NetworkRepo
+import co.touchlab.sessionize.api.NotificationsApi
 import co.touchlab.sessionize.db.SessionizeDbHelper
 import co.touchlab.sessionize.file.FileRepo
+import co.touchlab.sessionize.platform.Concurrent
 import co.touchlab.sessionize.platform.NotificationsModel
 import co.touchlab.sessionize.platform.logException
+import com.russhwolf.settings.Settings
 import kotlinx.serialization.json.Json
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
 
-object AppContext {
+typealias PlatformFileLoader = (filePrefix: String, fileType: String) -> String?
+typealias PlatformCrashlyticsLog = (s: String) -> Unit
+typealias PlatformCrashlyticsException = (e:Throwable, message:String) ->Unit
+
+object AppContext :KoinComponent {
     //Workaround for https://github.com/Kotlin/kotlinx.serialization/issues/441
     private val primeJson = Json.nonstrict
+    private val appSettings : Settings by inject()
 
     fun initAppContext(networkRepo: NetworkRepo = NetworkRepo,
                        fileRepo: FileRepo = FileRepo,
-                       serviceRegistry: ServiceRegistry = ServiceRegistry,
                        dbHelper: SessionizeDbHelper = SessionizeDbHelper,
                        notificationsModel: NotificationsModel = NotificationsModel) {
-        dbHelper.initDatabase(serviceRegistry.dbDriver)
 
-        serviceRegistry.notificationsApi.initializeNotifications { success ->
-            serviceRegistry.concurrent.backgroundTask({ success }, {
+        dbHelper.initDatabase(get())
+
+        val notificationsApi : NotificationsApi = get()
+        val concurrent : Concurrent = get()
+
+        notificationsApi.initializeNotifications { success ->
+            concurrent.backgroundTask({ success }, {
                 if (it) {
                     notificationsModel.createNotifications()
                 } else {
@@ -29,25 +43,25 @@ object AppContext {
             })
         }
 
-        serviceRegistry.concurrent.backgroundTask({ maybeLoadSeedData(fileRepo, serviceRegistry) }) {
+        concurrent.backgroundTask({ maybeLoadSeedData(fileRepo) }) {
             networkRepo.refreshData()
         }
     }
 
-    private fun maybeLoadSeedData(fileRepo: FileRepo, serviceRegistry: ServiceRegistry) {
+    private fun maybeLoadSeedData(fileRepo: FileRepo) {
         try {
-            if (firstRun(serviceRegistry)) {
+            if (firstRun()) {
                 fileRepo.seedFileLoad()
-                updateFirstRun(serviceRegistry)
+                updateFirstRun()
             }
         } catch (e: Exception) {
             logException(e)
         }
     }
 
-    private fun firstRun(serviceRegistry: ServiceRegistry): Boolean = serviceRegistry.appSettings.getBoolean(KEY_FIRST_RUN, true)
+    private fun firstRun(): Boolean = appSettings.getBoolean(KEY_FIRST_RUN, true)
 
-    private fun updateFirstRun(serviceRegistry: ServiceRegistry) {
-        serviceRegistry.appSettings.putBoolean(KEY_FIRST_RUN, false)
+    private fun updateFirstRun() {
+        appSettings.putBoolean(KEY_FIRST_RUN, false)
     }
 }

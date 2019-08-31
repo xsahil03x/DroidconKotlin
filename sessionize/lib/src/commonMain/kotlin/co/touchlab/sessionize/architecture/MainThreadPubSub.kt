@@ -1,12 +1,15 @@
 package co.touchlab.sessionize.architecture
 
-import co.touchlab.sessionize.ServiceRegistry
+import co.touchlab.sessionize.platform.Concurrent
 import co.touchlab.sessionize.platform.backToFront
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.freeze
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class MainThreadPubSub<T> : BasePub<T>(), Sub<T> {
+class MainThreadPubSub<T> : BasePub<T>(), Sub<T>, KoinComponent {
     private val subSetLocal = ThreadLocalRef<MutableCollection<Sub<T>>>()
+    private val concurrent: Concurrent by inject()
 
     init {
         subSetLocal.set(mutableSetOf())
@@ -16,7 +19,7 @@ class MainThreadPubSub<T> : BasePub<T>(), Sub<T> {
 
     override fun onNext(next: T) {
         next.freeze()
-        if(ServiceRegistry.concurrent.allMainThread){
+        if(concurrent.allMainThread){
             applyNextValue(next)
         }else {
             backToFront({ next }) {
@@ -27,7 +30,7 @@ class MainThreadPubSub<T> : BasePub<T>(), Sub<T> {
 
     override fun onError(t: Throwable) {
         t.freeze()
-        if(ServiceRegistry.concurrent.allMainThread){
+        if(concurrent.allMainThread){
             applyError(t)
         }else {
             backToFront({ t }) {

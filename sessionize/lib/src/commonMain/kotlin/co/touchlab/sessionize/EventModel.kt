@@ -3,6 +3,8 @@ package co.touchlab.sessionize
 import co.touchlab.droidcon.db.MySessions
 import co.touchlab.droidcon.db.Session
 import co.touchlab.droidcon.db.UserAccount
+import co.touchlab.sessionize.api.AnalyticsApi
+import co.touchlab.sessionize.api.SessionizeApi
 import co.touchlab.sessionize.db.SessionizeDbHelper.sessionQueries
 import co.touchlab.sessionize.db.SessionizeDbHelper.userAccountQueries
 import co.touchlab.sessionize.db.room
@@ -12,6 +14,8 @@ import co.touchlab.sessionize.platform.backgroundSuspend
 import co.touchlab.sessionize.platform.currentTimeMillis
 import co.touchlab.sessionize.platform.logException
 import kotlinx.coroutines.launch
+import org.koin.core.get
+import org.koin.core.inject
 import kotlin.math.max
 
 class EventModel(val sessionId: String) : BaseQueryModelView<Session, SessionInfo>(
@@ -19,11 +23,13 @@ class EventModel(val sessionId: String) : BaseQueryModelView<Session, SessionInf
         { q ->
             val session = q.executeAsOne()
             collectSessionInfo(session)
-        },
-        ServiceRegistry.coroutinesDispatcher) {
+        }) {
+
+    private val sessionizeApi: SessionizeApi by inject()
+    private val analyticsApi: AnalyticsApi by inject()
 
     init {
-        ServiceRegistry.clLogCallback("init EventModel($sessionId)")
+        get<PlatformCrashlyticsLog>().invoke("init EventModel($sessionId)")
     }
 
     interface EventView : View<SessionInfo>
@@ -53,7 +59,7 @@ class EventModel(val sessionId: String) : BaseQueryModelView<Session, SessionInf
         NotificationsModel.recreateReminderNotifications()
         NotificationsModel.recreateFeedbackNotifications()
         if (rsvp) {
-            ServiceRegistry.sessionizeApi.recordRsvp(methodName, localSessionId)
+            sessionizeApi.recordRsvp(methodName, localSessionId)
 
             sendAnalytics(localSessionId, rsvp)
         }
@@ -76,7 +82,7 @@ class EventModel(val sessionId: String) : BaseQueryModelView<Session, SessionInf
             } else {
                 -1
             }
-            ServiceRegistry.analyticsApi.logEvent("RSVP_EVENT", params)
+            analyticsApi.logEvent("RSVP_EVENT", params)
         } catch (e: Exception) {
             logException(e)
         }

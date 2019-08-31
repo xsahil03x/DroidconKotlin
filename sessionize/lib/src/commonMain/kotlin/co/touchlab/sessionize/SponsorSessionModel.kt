@@ -1,6 +1,7 @@
 package co.touchlab.sessionize
 
 import co.touchlab.droidcon.db.UserAccount
+import co.touchlab.sessionize.api.AnalyticsApi
 import co.touchlab.sessionize.db.SessionizeDbHelper.sponsorSessionQueries
 import co.touchlab.sessionize.db.SessionizeDbHelper.userAccountQueries
 import co.touchlab.sessionize.jsondata.Sponsor
@@ -8,10 +9,13 @@ import co.touchlab.sessionize.platform.backgroundSuspend
 import co.touchlab.sessionize.platform.logException
 import co.touchlab.sessionize.platform.printThrowable
 import kotlinx.coroutines.launch
+import org.koin.core.KoinComponent
+import org.koin.core.context.GlobalContext
+import org.koin.core.get
 import kotlin.native.concurrent.ThreadLocal
 
 @ThreadLocal
-object SponsorSessionModel : BaseModel(ServiceRegistry.coroutinesDispatcher) {
+object SponsorSessionModel : BaseModel(), KoinComponent {
 
     //This is super ugly and I apologize, but the changes weren't finished in time and I need to release...
     var sponsor: Sponsor? by FrozenDelegate()
@@ -54,7 +58,7 @@ object SponsorSessionModel : BaseModel(ServiceRegistry.coroutinesDispatcher) {
                 params["sponsorId"] = it.sponsorId ?: ""
                 params["name"] = it.name
 
-                ServiceRegistry.analyticsApi.logEvent("SPONSOR_VIEWED", params)
+                get<AnalyticsApi>().logEvent("SPONSOR_VIEWED", params)
             }
 
         } catch (e: Exception) {
@@ -66,7 +70,8 @@ object SponsorSessionModel : BaseModel(ServiceRegistry.coroutinesDispatcher) {
         suspend fun update(data: VT)
         fun error(t: Throwable) {
             printThrowable(t)
-            ServiceRegistry.softExceptionCallback(t, t.message ?: "(Unknown View Error)")
+            GlobalContext.get().koin.get<PlatformCrashlyticsException>()
+                    .invoke(t, t.message ?: "(Unknown View Error)")
         }
     }
 }

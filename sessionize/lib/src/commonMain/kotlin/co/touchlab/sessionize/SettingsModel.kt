@@ -2,14 +2,13 @@ package co.touchlab.sessionize
 
 import co.touchlab.sessionize.api.NotificationsApi
 import co.touchlab.sessionize.platform.INotificationsModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.koin.core.inject
 
 
-class SettingsModel(
-        private val notificationsModel: INotificationsModel,
-        private val notificationsApi: NotificationsApi,
-        coroutineDispatcher: CoroutineDispatcher) : BaseModel(coroutineDispatcher) {
+class SettingsModel(private val notificationsModel: INotificationsModel) : BaseModel() {
+
+    private val notificationsApi: NotificationsApi by inject()
 
     fun setRemindersSettingEnabled(enabled:Boolean) = launch {
         notificationsModel.setRemindersEnabled(enabled)

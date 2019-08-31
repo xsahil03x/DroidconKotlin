@@ -2,12 +2,15 @@ package co.touchlab.sessionize.platform
 
 import co.touchlab.droidcon.db.MySessions
 import co.touchlab.sessionize.Durations
-import co.touchlab.sessionize.ServiceRegistry
 import co.touchlab.sessionize.SettingsKeys.FEEDBACK_ENABLED
 import co.touchlab.sessionize.SettingsKeys.LOCAL_NOTIFICATIONS_ENABLED
 import co.touchlab.sessionize.SettingsKeys.REMINDERS_ENABLED
+import co.touchlab.sessionize.api.NotificationsApi
 import co.touchlab.sessionize.db.SessionizeDbHelper.sessionQueries
+import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import kotlin.native.concurrent.ThreadLocal
 
 interface INotificationsModel {
@@ -32,33 +35,36 @@ interface INotificationsModel {
 }
 
 @ThreadLocal
-object NotificationsModel : INotificationsModel {
+object NotificationsModel : INotificationsModel, KoinComponent {
+
+    private val appSettings: Settings by inject()
+    private val notificationsApi: NotificationsApi by inject()
 
     // Settings
 
     override fun notificationsEnabled(): Boolean {
-        return ServiceRegistry.appSettings.getBoolean(LOCAL_NOTIFICATIONS_ENABLED, true)
+        return appSettings.getBoolean(LOCAL_NOTIFICATIONS_ENABLED, true)
     }
 
     override fun feedbackEnabled(): Boolean {
-        return ServiceRegistry.appSettings.getBoolean(FEEDBACK_ENABLED, true)
+        return appSettings.getBoolean(FEEDBACK_ENABLED, true)
     }
 
     override fun remindersEnabled(): Boolean {
-        return ServiceRegistry.appSettings.getBoolean(LOCAL_NOTIFICATIONS_ENABLED, true) &&
-                ServiceRegistry.appSettings.getBoolean(REMINDERS_ENABLED, true)
+        return appSettings.getBoolean(LOCAL_NOTIFICATIONS_ENABLED, true) &&
+                appSettings.getBoolean(REMINDERS_ENABLED, true)
     }
 
     override fun setNotificationsEnabled(enabled: Boolean) {
-        ServiceRegistry.appSettings[LOCAL_NOTIFICATIONS_ENABLED] = enabled
+        appSettings[LOCAL_NOTIFICATIONS_ENABLED] = enabled
     }
 
     override fun setRemindersEnabled(enabled: Boolean) {
-        ServiceRegistry.appSettings[REMINDERS_ENABLED] = enabled
+        appSettings[REMINDERS_ENABLED] = enabled
     }
 
     override fun setFeedbackEnabled(enabled: Boolean) {
-        ServiceRegistry.appSettings[FEEDBACK_ENABLED] = enabled
+        appSettings[FEEDBACK_ENABLED] = enabled
     }
 
 
@@ -74,15 +80,15 @@ object NotificationsModel : INotificationsModel {
         cancelFeedbackNotifications()
     }
 
-    override fun cancelFeedbackNotifications() = ServiceRegistry.notificationsApi.cancelFeedbackNotifications()
-    override fun cancelReminderNotifications(andDismissals: Boolean) = ServiceRegistry.notificationsApi.cancelReminderNotifications(andDismissals)
+    override fun cancelFeedbackNotifications() = notificationsApi.cancelFeedbackNotifications()
+    override fun cancelReminderNotifications(andDismissals: Boolean) = notificationsApi.cancelReminderNotifications(andDismissals)
 
     override fun recreateReminderNotifications() {
         cancelReminderNotifications(false)
         if (remindersEnabled()){
             backgroundTask({ sessionQueries.mySessions().executeAsList() }) { mySessions ->
                 if(mySessions.isNotEmpty()) {
-                    ServiceRegistry.notificationsApi.scheduleReminderNotificationsForSessions(mySessions)
+                    notificationsApi.scheduleReminderNotificationsForSessions(mySessions)
                 }
             }
         }
@@ -93,7 +99,7 @@ object NotificationsModel : INotificationsModel {
         if (feedbackEnabled()){
             backgroundTask({ sessionQueries.mySessions().executeAsList() }) { mySessions ->
                 if(mySessions.isNotEmpty()) {
-                    ServiceRegistry.notificationsApi.scheduleFeedbackNotificationsForSessions(mySessions)
+                    notificationsApi.scheduleFeedbackNotificationsForSessions(mySessions)
                 }
             }
         }

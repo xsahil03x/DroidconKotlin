@@ -4,16 +4,17 @@ import co.touchlab.droidcon.db.Session
 import co.touchlab.droidcon.db.UserAccount
 import co.touchlab.sessionize.db.SessionizeDbHelper.userAccountQueries
 import co.touchlab.sessionize.db.sessions
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 class SpeakerModel(speakerId: String) : BaseQueryModelView<UserAccount, UserAccount>(
         userAccountQueries.selectById(speakerId),
         {
             it.executeAsOne()
-        },
-        ServiceRegistry.coroutinesDispatcher
-) {
+        }
+), KoinComponent {
     init {
-        ServiceRegistry.clLogCallback("init SpeakerModel($speakerId)")
+        get<PlatformCrashlyticsLog>().invoke("init SpeakerModel($speakerId)")
     }
 
     interface SpeakerView : View<UserAccount>

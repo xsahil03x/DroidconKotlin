@@ -2,13 +2,12 @@ package co.touchlab.sessionize
 
 import co.touchlab.droidcon.db.SessionWithRoom
 import co.touchlab.sessionize.db.SessionizeDbHelper
-import co.touchlab.sessionize.db.isBlock
-import co.touchlab.sessionize.db.isRsvp
 import co.touchlab.sessionize.display.DaySchedule
 import co.touchlab.sessionize.display.convertMapToDaySchedule
 import co.touchlab.sessionize.display.formatHourBlocks
 import co.touchlab.stately.ensureNeverFrozen
 import co.touchlab.stately.freeze
+import org.koin.core.get
 
 /**
  * Data model for schedule. Configure live data instances.
@@ -26,11 +25,10 @@ class ScheduleModel(private val allEvents: Boolean) : BaseQueryModelView<Session
             val hourBlocks = formatHourBlocks(sessions)
             convertMapToDaySchedule(hourBlocks).freeze() //TODO: This shouldn't need to be frozen
             //Spent several full days trying to debug why, but haven't sorted it out.
-        },
-        ServiceRegistry.coroutinesDispatcher) {
+        }) {
 
     init {
-        ServiceRegistry.clLogCallback("init ScheduleModel()")
+        get<PlatformCrashlyticsLog>().invoke("init ScheduleModel()")
         ensureNeverFrozen()
     }
 

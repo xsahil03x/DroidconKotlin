@@ -1,12 +1,10 @@
 package co.touchlab.sessionize.display
 
 import co.touchlab.droidcon.db.SessionWithRoom
-import co.touchlab.sessionize.ServiceRegistry
 import co.touchlab.sessionize.db.isBlock
 import co.touchlab.sessionize.db.isRsvp
 import co.touchlab.sessionize.platform.DateFormatHelper
 import co.touchlab.sessionize.platform.currentTimeMillis
-import kotlin.native.concurrent.ThreadLocal
 
 data class DaySchedule(
         val dayString: String,

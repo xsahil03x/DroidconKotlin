@@ -5,14 +5,16 @@ import androidx.fragment.app.FragmentManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import co.touchlab.droidcon.db.MyPastSession
 import co.touchlab.sessionize.FeedbackModel
-import co.touchlab.sessionize.ServiceRegistry
+import co.touchlab.sessionize.PlatformCrashlyticsException
 import co.touchlab.sessionize.api.FeedbackApi
 import co.touchlab.sessionize.platform.AndroidAppContext
 import co.touchlab.sessionize.platform.NotificationsModel.setFeedbackEnabled
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class FeedbackManager : FeedbackApi {
+class FeedbackManager : FeedbackApi, KoinComponent {
 
-
+    private val softExceptionCallback: PlatformCrashlyticsException by inject()
     private var fragmentManager:FragmentManager? = null
     private var feedbackModel:FeedbackModel = FeedbackModel()
     private var feedbackDialog:FeedbackDialog? = null
@@ -30,7 +32,7 @@ class FeedbackManager : FeedbackApi {
         try {
             feedbackDialog?.dismiss()
         } catch (e: Exception) {
-            ServiceRegistry.softExceptionCallback(e, "Failed closing FeedbackManager")
+            softExceptionCallback(e, "Failed closing FeedbackManager")
         }
         feedbackDialog = null
     }
@@ -47,7 +49,7 @@ class FeedbackManager : FeedbackApi {
                 feedbackDialog?.showNow(it, "FeedbackDialog")
             }
         } catch (e: Exception) {
-            ServiceRegistry.softExceptionCallback(e, "Failed generating feedback dialog. Probably closing context.")
+            softExceptionCallback(e, "Failed generating feedback dialog. Probably closing context.")
         }
     }
 

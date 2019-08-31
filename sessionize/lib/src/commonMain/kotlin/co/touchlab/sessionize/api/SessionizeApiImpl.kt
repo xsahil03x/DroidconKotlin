@@ -1,10 +1,10 @@
 package co.touchlab.sessionize.api
 
-import co.touchlab.sessionize.ServiceRegistry
 import co.touchlab.sessionize.SettingsKeys
 import co.touchlab.sessionize.jsondata.Days
 import co.touchlab.sessionize.jsondata.Session
 import co.touchlab.sessionize.platform.createUuid
+import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.forms.submitForm
@@ -18,6 +18,7 @@ import io.ktor.http.takeFrom
 import kotlinx.io.core.use
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.list
+import org.koin.core.context.GlobalContext
 import kotlin.native.concurrent.ThreadLocal
 
 @ThreadLocal
@@ -91,10 +92,11 @@ object SessionizeApiImpl : SessionizeApi {
 }
 
 internal fun userUuid(): String {
-    if (ServiceRegistry.appSettings.getString(SettingsKeys.USER_UUID).isBlank()) {
-        ServiceRegistry.appSettings.putString(SettingsKeys.USER_UUID, createUuid())
+    val appSettings = GlobalContext.get().koin.get<Settings>()
+    if (appSettings.getString(SettingsKeys.USER_UUID).isBlank()) {
+        appSettings.putString(SettingsKeys.USER_UUID, createUuid())
     }
-    return ServiceRegistry.appSettings.getString(SettingsKeys.USER_UUID)
+    return appSettings.getString(SettingsKeys.USER_UUID)
 }
 
 internal fun parseSessionsFromDays(scheduleJson: String): List<Session> {

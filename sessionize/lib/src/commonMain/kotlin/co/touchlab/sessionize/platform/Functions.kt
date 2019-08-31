@@ -1,7 +1,6 @@
 package co.touchlab.sessionize.platform
 
-import co.touchlab.firebase.firestore.Query
-import co.touchlab.sessionize.ServiceRegistry
+import org.koin.core.context.GlobalContext
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -11,7 +10,7 @@ import kotlin.coroutines.suspendCoroutine
  * multithreaded coroutines arrive this will be pretty useless, but good for now.
  */
 internal suspend fun <R> backgroundSuspend(backJob: () -> R): R {
-    return if(ServiceRegistry.concurrent.allMainThread)
+    return if(findConcurrent().allMainThread)
         backJob()
     else {
         val continuationContainer = ContinuationContainer(null)
@@ -26,8 +25,10 @@ internal suspend fun <R> backgroundSuspend(backJob: () -> R): R {
     }
 }
 
+private fun findConcurrent() = GlobalContext.get().koin.get<Concurrent>()
+
 internal fun <B> backgroundTask(backJob: () -> B, mainJob: (B) -> Unit){
-    ServiceRegistry.concurrent.backgroundTask(backJob, mainJob)
+    findConcurrent().backgroundTask(backJob, mainJob)
 }
 
 internal expect fun <B> backgroundTaskPlatform(backJob: () -> B, mainJob: (B) -> Unit)

@@ -7,7 +7,7 @@ import co.touchlab.sessionize.platform.printThrowable
 import co.touchlab.stately.ensureNeverFrozen
 import com.squareup.sqldelight.Query
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
+import org.koin.core.context.GlobalContext.get
 
 /**
  * Sort of a "controller" in MVC thinking. Pass in the SQLDelight Query,
@@ -17,8 +17,7 @@ import kotlin.coroutines.CoroutineContext
  */
 abstract class BaseQueryModelView<Q : Any, VT>(
         query: Query<Q>,
-        extractData: (Query<Q>) -> VT,
-        mainContext: CoroutineContext) : BaseModel(mainContext) {
+        extractData: (Query<Q>) -> VT) : BaseModel() {
 
     private val queryPub = QueryPub(query, extractData)
 
@@ -57,7 +56,8 @@ abstract class BaseQueryModelView<Q : Any, VT>(
         suspend fun update(data: VT)
         fun error(t:Throwable){
             printThrowable(t)
-            ServiceRegistry.softExceptionCallback(t, t.message?:"(Unknown View Error)")
+            get().koin.get<PlatformCrashlyticsException>()
+                    .invoke(t, t.message?:"(Unknown View Error)")
         }
     }
 }

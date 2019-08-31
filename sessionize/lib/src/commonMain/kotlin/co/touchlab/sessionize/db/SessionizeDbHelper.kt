@@ -8,7 +8,7 @@ import co.touchlab.droidcon.db.SessionSpeakerQueries
 import co.touchlab.droidcon.db.SessionWithRoom
 import co.touchlab.droidcon.db.SponsorSessionQueries
 import co.touchlab.droidcon.db.UserAccountQueries
-import co.touchlab.sessionize.ServiceRegistry
+import co.touchlab.sessionize.api.SessionizeApi
 import co.touchlab.sessionize.api.parseSessionsFromDays
 import co.touchlab.sessionize.jsondata.SessionSpeaker
 import co.touchlab.sessionize.jsondata.Speaker
@@ -22,11 +22,14 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlDriver
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.list
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-object SessionizeDbHelper {
+object SessionizeDbHelper :KoinComponent {
 
     private val driverRef = AtomicReference<SqlDriver?>(null)
     private val dbRef = AtomicReference<DroidconDb?>(null)
+    private val sessionizeApi: SessionizeApi by inject()
 
     fun initDatabase(sqlDriver: SqlDriver) {
         driverRef.value = sqlDriver.freeze()
@@ -54,7 +57,7 @@ object SessionizeDbHelper {
         sessions.forEach {
             val rating = it.feedbackRating
             if(rating != null) {
-                if(ServiceRegistry.sessionizeApi.sendFeedback(it.id, rating.toInt(), it.feedbackComment)){
+                if(sessionizeApi.sendFeedback(it.id, rating.toInt(), it.feedbackComment)){
                     instance.sessionQueries.updateFeedBackSent(it.id)
                 }
             }

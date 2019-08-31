@@ -4,12 +4,13 @@ import co.touchlab.sessionize.platform.logException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import kotlin.coroutines.CoroutineContext
 
-open class BaseModel(
-        private val mainContext: CoroutineContext
-) : CoroutineScope {
+open class BaseModel : CoroutineScope, KoinComponent {
 
+    private val mainContext: CoroutineContext by inject()
     private val job = Job()
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         showError(throwable)

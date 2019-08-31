@@ -1,18 +1,26 @@
 package co.touchlab.sessionize
 
 import co.touchlab.sessionize.api.AnalyticsApi
+import co.touchlab.sessionize.api.NotificationsApi
 import co.touchlab.sessionize.api.SessionizeApi
 import co.touchlab.sessionize.db.DateAdapter
 import co.touchlab.sessionize.db.SessionizeDbHelper
 import co.touchlab.sessionize.mocks.FeedbackApiMock
 import co.touchlab.sessionize.mocks.NotificationsApiMock
+import co.touchlab.sessionize.platform.Concurrent
 import co.touchlab.sessionize.platform.TestConcurrent
+import com.squareup.sqldelight.db.SqlDriver
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import org.koin.core.KoinComponent
+import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-abstract class EventModelTest {
+abstract class EventModelTest:KoinComponent {
     private val sessionizeApiMock = SessionizeApiMock()
     private val analyticsApiMock = AnalyticsApiMock()
     private val notificationsApiMock = NotificationsApiMock()
@@ -22,20 +30,38 @@ abstract class EventModelTest {
 
     @BeforeTest
     fun setup() {
-        ServiceRegistry.initServiceRegistry(testDbConnection(),
-                Dispatchers.Main, TestSettings(), TestConcurrent, sessionizeApiMock, analyticsApiMock, notificationsApiMock, timeZone)
+        val commonModule = module {
+            threadLocal<SessionizeApi> { sessionizeApiMock }
+            single<Concurrent> { TestConcurrent }
+        }
 
-        ServiceRegistry.initLambdas({ filePrefix, fileType ->
-            when (filePrefix) {
-                "sponsors" -> SPONSORS
-                "speakers" -> SPEAKERS
-                "schedule" -> SCHEDULE
-                else -> SCHEDULE
+        val platformModule = module {
+            single<AnalyticsApi> { analyticsApiMock }
+            single<SqlDriver> { testDbConnection() }
+            single<CoroutineDispatcher> { Dispatchers.Main }
+            single { TestSettings() }
+            single(named("timeZone")){
+                timeZone
             }
-        }, { s: String -> Unit }, {e:Throwable, message:String -> println(message)})
+            single<NotificationsApi> { notificationsApiMock }
+            single<PlatformFileLoader>(named("PlatformFileLoader")) { { filePrefix, fileType ->
+                when (filePrefix) {
+                    "sponsors" -> SPONSORS
+                    "speakers" -> SPEAKERS
+                    "schedule" -> SCHEDULE
+                    else -> SCHEDULE
+                }
+            } }
+            single { { s: String -> Unit } }
+            single {{ e:Throwable, message:String -> println(message)}}
+
+        }
+
+        startKoin {
+            modules(listOf(commonModule, platformModule))
+        }
 
         AppContext.initAppContext()
-
     }
 
     @Test

@@ -1,5 +1,9 @@
 package co.touchlab.sessionize.settings
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,23 +12,16 @@ import android.widget.CompoundButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import co.touchlab.sessionize.FragmentAnimation
-import co.touchlab.sessionize.NavigationHost
 import co.touchlab.sessionize.R
-import co.touchlab.sessionize.ServiceRegistry
 import co.touchlab.sessionize.SettingsKeys.FEEDBACK_ENABLED
 import co.touchlab.sessionize.SettingsKeys.REMINDERS_ENABLED
-import co.touchlab.sessionize.about.AboutFragment
-import android.content.Intent
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.IntentFilter
-import androidx.navigation.findNavController
 import co.touchlab.sessionize.feedback.FeedbackManager.Companion.FeedbackDisabledNotificationName
 import co.touchlab.sessionize.platform.AndroidAppContext
-
+import com.russhwolf.settings.Settings
+import org.koin.android.ext.android.inject
 
 class SettingsFragment : Fragment() {
 
@@ -72,20 +69,22 @@ class SettingsFragment : Fragment() {
         updateContent()
     }
 
+    private val appSettings: Settings by inject()
+
     private fun updateContent() {
         val adapter = SettingsAdapter(activity!!)
 
         //SettingsModel.loadSettingsInfo {
             adapter.addSwitchRow("Enable Feedback",
                     R.drawable.baseline_feedback_24,
-                    ServiceRegistry.appSettings.getBoolean(FEEDBACK_ENABLED, true),
+                    appSettings.getBoolean(FEEDBACK_ENABLED, true),
                     CompoundButton.OnCheckedChangeListener { _, isChecked ->
                         settingsViewModel.settingsModel.setFeedbackSettingEnabled(isChecked)
                     }
             )
             adapter.addSwitchRow("Enable Reminders",
                     R.drawable.baseline_insert_invitation_24,
-                    ServiceRegistry.appSettings.getBoolean(REMINDERS_ENABLED, true),
+                    appSettings.getBoolean(REMINDERS_ENABLED, true),
                     CompoundButton.OnCheckedChangeListener { _, isChecked ->
                         settingsViewModel.settingsModel.setRemindersSettingEnabled(isChecked)
                     }

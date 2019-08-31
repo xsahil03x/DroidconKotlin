@@ -72,6 +72,7 @@ kotlin {
                 implementation deps.ktor.commonJson
                 implementation deps.serialization.commonRuntime
                 implementation deps.firebase.firestoreKmp
+                implementation 'co.touchlab:koin-core:2.1.6-mp'
             }
         }
 

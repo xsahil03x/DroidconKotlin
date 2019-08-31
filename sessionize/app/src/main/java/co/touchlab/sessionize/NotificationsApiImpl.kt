@@ -24,6 +24,9 @@ import co.touchlab.sessionize.platform.NotificationsModel.getReminderNotificatio
 import co.touchlab.sessionize.platform.NotificationsModel.getReminderNotificationTitle
 import co.touchlab.sessionize.platform.NotificationsModel.getReminderTimeFromSession
 import co.touchlab.sessionize.platform.currentTimeMillis
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.qualifier.named
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.NoSuchElementException
@@ -156,7 +159,7 @@ class NotificationsApiImpl : NotificationsApi {
         }
     }
 
-    companion object{
+    companion object : KoinComponent{
         val TAG:String = NotificationsApiImpl::class.java.simpleName
         const val notificationFeedbackId = 1
         const val notificationReminderId = 2
@@ -172,7 +175,7 @@ class NotificationsApiImpl : NotificationsApi {
         fun msTimeToString(time:Long): String{
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = time
-            calendar.timeZone = TimeZone.getTimeZone(ServiceRegistry.timeZone)
+            calendar.timeZone = TimeZone.getTimeZone(get<String>(named("timeZone")))
             val format = SimpleDateFormat("MM/dd/YYYY, hh:mma")
             return format.format(calendar.time)
         }
